@@ -27,6 +27,10 @@
     <webjars-bootstrap.version>5.3.8</webjars-bootstrap.version>
     <webjars-font-awesome.version>4.7.0</webjars-font-awesome.version>
 
+    <sonar.projectKey>snehalshirsath03_petclinic</sonar.projectKey>
+    <sonar.organization>snehalshirsath03</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+
     <!-- Checkstyle needs to stay on v12 since v13 sets minimal jdk to 21 - https://checkstyle.org/releasenotes.html#Release_13.0.0 -->
     <checkstyle.version>12.3.1</checkstyle.version>
     <jacoco.version>0.8.14</jacoco.version>

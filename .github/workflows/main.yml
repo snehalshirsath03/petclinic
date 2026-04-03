@@ -1,0 +1,52 @@
+name: PetApp CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+
+    # ✅ Build (skip heavy integration tests)
+    - name: Build Application
+      run: mvn clean install -DskipITs
+
+    # ✅ Unit Tests
+    - name: Run Unit Tests
+      run: mvn test
+
+    # ✅ Sonar Scan (skip tests to avoid Postgres issue)
+    - name: SonarCloud Scan
+      run: mvn clean package -DskipTests sonar:sonar \
+        -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+
+    # ✅ Build Docker Image
+    - name: Build Docker Image
+      run: docker build -t petapp .
+
+    # ✅ Login to Nexus
+    - name: Login to Nexus
+      run: echo "${{ secrets.NEXUS_PASSWORD }}" | docker login \
+        ${{ secrets.NEXUS_URL }} \
+        -u ${{ secrets.NEXUS_USERNAME }} \
+        --password-stdin
+
+    # ✅ Tag Image
+    - name: Tag Docker Image
+      run: docker tag petapp ${{ secrets.NEXUS_URL }}/petapp:latest
+
+    # ✅ Push Image to Nexus
+    - name: Push Docker Image
+      run: docker push ${{ secrets.NEXUS_URL }}/petapp:latest
