@@ -36,8 +36,8 @@ jobs:
       run: docker build -t petapp .
 
     # ✅ Login to Nexus
-    - name: Docker Login
-      run: echo "${{ secrets.NEXUS_PASSWORD }}" | docker login http://<NEXUS-IP>:8082 -u admin --password-stdin
+    - name: Docker Login to Nexus
+      run: echo "${{ secrets.NEXUS_PASSWORD }}" | docker login ${{ secrets.NEXUS_URL }} -u admin --password-stdin
     # ✅ Tag Image
     - name: Tag Docker Image
       run: docker tag petapp ${{ secrets.NEXUS_URL }}/petapp:latest
