@@ -7,47 +7,50 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
 
+    # 1️⃣ Checkout Code
     - name: Checkout Code
       uses: actions/checkout@v3
 
+    # 2️⃣ Setup Java (FIXED)
     - name: Setup Java
       uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
         java-version: '17'
 
-    # ✅ Build (skip heavy integration tests)
-    - name: Build Application
+    # 3️⃣ Build Application (SKIP Integration Tests)
+    - name: Build with Maven
       run: mvn clean install -DskipITs
 
-    # ✅ Unit Tests
+    # 4️⃣ Run Unit Tests
     - name: Run Unit Tests
       run: mvn test
 
-    # ✅ Sonar Scan (skip tests to avoid Postgres issue)
+    # 5️⃣ SonarCloud Scan (FIXED 🔥)
     - name: SonarCloud Scan
-      run: mvn clean package -DskipTests sonar:sonar \
+      run: |
+        mvn clean package -DskipTests sonar:sonar \
+        -Dsonar.projectKey=snehalshirsath03_petclinic \
+        -Dsonar.organization=snehalshirsath03 \
+        -Dsonar.host.url=https://sonarcloud.io \
         -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
-    # ✅ Build Docker Image
+    # 6️⃣ Build Docker Image
     - name: Build Docker Image
       run: docker build -t petapp .
 
-    # ✅ Login to Nexus
+    # 7️⃣ Login to Nexus Docker Registry
     - name: Login to Nexus
-      run: echo "${{ secrets.NEXUS_PASSWORD }}" | docker login \
-        ${{ secrets.NEXUS_URL }} \
-        -u ${{ secrets.NEXUS_USERNAME }} \
-        --password-stdin
+      run: echo "${{ secrets.NEXUS_PASSWORD }}" | docker login ${{ secrets.NEXUS_URL }} -u ${{ secrets.NEXUS_USERNAME }} --password-stdin
 
-    # ✅ Tag Image
-    - name: Tag Docker Image
+    # 8️⃣ Tag Docker Image
+    - name: Tag Image
       run: docker tag petapp ${{ secrets.NEXUS_URL }}/petapp:latest
 
-    # ✅ Push Image to Nexus
-    - name: Push Docker Image
+    # 9️⃣ Push to Nexus
+    - name: Push to Nexus
       run: docker push ${{ secrets.NEXUS_URL }}/petapp:latest
