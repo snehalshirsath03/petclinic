@@ -40,8 +40,8 @@ jobs:
       run: echo "${{ secrets.NEXUS_PASSWORD }}" | docker login ${{ secrets.NEXUS_URL }} -u admin --password-stdin
     # ✅ Tag Image
     - name: Tag Docker Image
-      run: docker tag petapp ${{ secrets.NEXUS_URL }}/petapp:latest
+      run: docker tag petapp ${{ secrets.NEXUS_REGISTRY }}/petapp:latest
 
     # ✅ Push Image to Nexus
     - name: Push Docker Image
-      run: docker push ${{ secrets.NEXUS_URL }}/petapp:latest
+      run: docker push ${{ secrets.NEXUS_REGISTRY }}/petapp:latest
