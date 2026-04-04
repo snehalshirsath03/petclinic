@@ -22,11 +22,11 @@ jobs:
 
     # ✅ Build (skip heavy integration tests)
     - name: Build Application
-      run: mvn clean install -DskipITs
+      run: mvn clean package -DskipTests -DskipITs
 
     # ✅ Unit Tests
     - name: Run Unit Tests
-      run: mvn test
+      run: mvn test -DskipITs
 
     # ✅ Sonar Scan (skip tests to avoid Postgres issue)
     - name: SonarCloud Scan
