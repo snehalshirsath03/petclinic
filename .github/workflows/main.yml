@@ -25,8 +25,20 @@ jobs:
       run: mvn clean package -DskipTests -DskipITs
 
     # ✅ Unit Tests
-   # - name: Run Unit Tests
-    #  run: mvn test -DskipITs
+    - name: Run Unit Tests
+      run: mvn test -DskipITs
+
+    - name: Run Functional Tests
+      run: mvn verify -DskipITs
+
+    - name: Install JMeter
+      run: |
+        sudo apt update
+        sudo apt install -y jmeter
+
+    - name: Run Performance Test
+      run: |
+        jmeter -n -t src/test/jmeter/petclinic_test_plan.jmx -l results.jtl
 
     # ✅ Sonar Scan (skip tests to avoid Postgres issue)
     - name: SonarCloud Scan
