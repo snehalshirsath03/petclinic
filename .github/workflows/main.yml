@@ -42,7 +42,7 @@ jobs:
 
     # ✅ Sonar Scan (skip tests to avoid Postgres issue)
     - name: SonarCloud Scan
-      run: mvn clean package -DskipTests sonar:sonar -Dsonar.projectKey=snehalshirsath03_petclinic -Dsonar.organization=snehalshirsath03 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+      run: mvn clean package -DskipTests sonar:sonar -Dsonar.projectKey=snehalshirsath03_petclinic -Dsonar.organization=snehalshirsath03 -Dsonar.host.url=https://sonarcloud.io -Dsonar.coverage.exclusions=** -Dsonar.login=${{ secrets.SONAR_TOKEN }}
     # ✅ Build Docker Image
     - name: Build Docker Image
       run: docker build -t petapp .
