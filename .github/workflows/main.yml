@@ -26,10 +26,10 @@ jobs:
 
     # ✅ Unit Tests
     - name: Run Unit Tests
-      run: mvn test -DskipITs
+      run: mvn test -DskipITs -Dtest=!**/*IntegrationTests
 
     - name: Run Functional Tests
-      run: mvn verify -DskipITs
+      run: mvn verify -DskipITs -Dtest=!**/*IntegrationTests
 
     - name: Install JMeter
       run: |
